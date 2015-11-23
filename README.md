@@ -5,7 +5,7 @@ All R scripts, files, presentations etc. in this repository are materials for th
 of the Coursera Data Science Specialization held by professors of the Johns Hopkins Bloomberg School 
 of Public Health in cooperation with YELP.
 
-*Download of Yelp Data in the root/working directory of RStudio: 
+* Download of Yelp Data in the root/working directory of RStudio: 
 Yelp Dataset (575 MB)
 [https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/yelp_dataset_challenge_academic_dataset.zip] (https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/yelp_dataset_challenge_academic_dataset.zip)
       
