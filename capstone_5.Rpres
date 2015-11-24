@@ -1,0 +1,90 @@
+Data Science Capstone Project, Exists a relationship between review number and stars for Yelp's Dataset Challenge ?
+========================================================
+author: Paul Foellbach
+date: November 20, 2015
+
+=======================================================
+Introduction     
+The number of reviews and the content of business profile internet sites like Yelp are relevant for the success, number of visitors and revenues of businesses. Besides Yelp there are different other companys that provide similar services like zoominfo or hoovers. By these services users get a guideline with high review counts and good star rating, because they do not consume much time, are easy to understand, are very cheap and seem to signify excellence. Users are attracted to businesses with high review counts along with a good star rating, because they seem to be easy recognizable signifiers of excellence. In this report we answer the question: "Exists a relationship between review number and stars for Yelp's Dataset Challenge ?". The complete report you can read [here](https://github.com/amphibie/Coursera_Capstone_Project)
+
+Methods and Data     
+The dataset provided here is part of the Yelp Dataset Challenge and the specific dataset used 
+in this capstone corresponds to Round 6 of their challenge. This dataset consists of
+
+=======================================================
+five main objects encoded as JSON files: business, checkin, review, tip and user. The recorded information
+spans a ten year period with the earliest data from October 2004 and the latest from January 2015. The scope of the study utilizes the objects business and review. The first data set provides 61184 businesses and 105 variables, therein the review count and stars variables. The second contains 1.6 millions reviews and eight variables, therein the stars variable. To answer the question of this report we construct a simple linear regression model to verify the relationship between the two variables stars and percentage of reviews of the review object and conduct a significance test. Assume that the error term epsilon in the linear regression model is independent of x, and is normally distributed, with zero mean 
+and constant variance. We can decide whether there is any significant relationship between x and y by testing the null hypothesis that beta = 0 (at .05 significance level). We plot these variables against each other together with the fitted model data. The plot, fitted model data and significance test (see complete
+
+```{r, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
+library(jsonlite)
+library(plyr)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r, echo=FALSE, results='hide',message=FALSE, warning=FALSE}
+# Reading business and review data in R
+#business_data <- fromJSON(paste("[",paste(readLines(
+#  "yelp_academic_dataset_business.json"),
+#  collapse=","),"]"), flatten = TRUE)
+
+review_data <- stream_in(file("yelp_academic_dataset_review.json"))
+```
+
+
+```{r, results="hide", echo=FALSE, message=FALSE, warning=FALSE}
+#What percentage of the reviews are one to five star reviews (data set review_data ) ? 
+```
+
+```{r, results="hide", echo=FALSE, message=FALSE, warning=FALSE}
+#What percentage of the reviews are five star reviews
+five_stars <- length(review_data$stars[review_data$stars==5])/nrow(review_data)
+#0.3692986
+#What percentage of the reviews are four star reviews
+four_stars <- length(review_data$stars[review_data$stars==4])/nrow(review_data)
+#0.2973362
+#What percentage of the reviews are three star reviews
+three_stars <- length(review_data$stars[review_data$stars==3])/nrow(review_data)
+#0.1419258
+#What percentage of the reviews are two star reviews
+two_stars <-length(review_data$stars[review_data$stars==2])/nrow(review_data)
+#0.08960124
+#What percentage of the reviews are one star reviews
+one_star <-length(review_data$stars[review_data$stars==1])/nrow(review_data)
+#0.1018382
+
+#data frame creation with the values calculated above
+rd_star_rev_df <- data.frame(one_star, two_stars, three_stars, four_stars, five_stars)
+#one_star  two_stars three_stars four_stars five_stars
+#0.1018382 0.08960124   0.1419258  0.2973362  0.3692986
+
+#We create two vectors of the calculated percentage of reviews 
+#and stars for the plot and model
+vector_percent_reviewdata <- c(0.1018382, 0.08960124, 0.1419258, 0.2973362, 0.3692986)
+vector_stars_reviewdata <- c(1, 2, 3, 4, 5)
+
+#we make a Simple linear Regression Model 
+#of the variables stars and review percentage by these vectores
+stars_rd.lm <- lm(vector_stars_reviewdata ~ vector_percent_reviewdata)
+summary(stars_rd.lm)
+```
+=======================================================
+report [here](https://github.com/amphibie/Coursera_Capstone_Project)) show a significant relationship between these  
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#plot of percentage of reviews against stars,
+#that shows a clear linear relationship between these variables
+plot(vector_percent_reviewdata, vector_stars_reviewdata, main = "Review Data",xlab="Percentage of reviews", ylab = "Stars")
+abline(stars_rd.lm, col="blue")
+legend(x=0.1, y=5, legend="Fitted Model Data", fill="blue", bty="n")
+```      
+      
+variables. From one to five stars the percentage of reviews increases except the one star point, that has a bigger percentage than the two star point.
+
+=======================================================
+Results     
+The simple linear regression model, x-y plot and the F-statistics of the significance test prove a significant relationship between these variables. So we can clearly answer the report question positively. A significant positive relationship exists between these variables.
+
+Discussion     
+With decreasing star rating the reviewers write less reviews, except the one star rating. The interpretation of that result is speculation, only interviews of all reviewers could clear that question. I assume that the reviewers stimulus to write a review increases with increasing satisfaction with a business and decreases with decreasing satisfaction. The mentioned exception that the review number increases for the worst businesses (one star), I would explain as follows. The stimulus for writing reviews seems here to increase against the trend, because these worst businesses seem to fall below a red line of customer dissatisfaction.
